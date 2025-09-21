@@ -1,0 +1,32 @@
+.day {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+  user-select: none;
+}
+
+.day:hover {
+  background: #f0f0f0;
+  transform: scale(1.05);
+}
+
+.empty {
+  background: transparent;
+  border: none;
+  cursor: default;
+}
+
+.today {
+  background: #0077ff;
+  color: white;
+  font-weight: bold;
+}
+
+.selected {
+  background: #ff9800;
+  color: white;
+  font-weight: bold;
+}
