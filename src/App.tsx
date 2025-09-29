@@ -1,15 +1,13 @@
 import React from "react";
-import CalendarProvider from "./Scheduling/CalendarProvider";
-import MonthComponent from "./Scheduling/MonthComponent"; // your calendar UI
+import  CalendarProvider  from "./Scheduling/CalendarProvider";
 import EmployeeListComponent from "./Scheduling/EmployeeListComponent";
+import MonthComponent from "./Scheduling/MonthComponent";
 
 export default function App() {
   return (
     <CalendarProvider>
-      <div style={{ display: "flex", gap: 24 }}>
-        <MonthComponent />
-        <EmployeeListComponent />
-      </div>
+      <MonthComponent />
+      <EmployeeListComponent />
     </CalendarProvider>
   );
 }

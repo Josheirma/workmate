@@ -1,42 +1,70 @@
-// this file exports ONLY the provider component (default export).
-// Do not export other constants/types from this file.
 import React, { useState } from "react";
-import { CalendarContext, defaultCalendarContext, User } from "./CalendarContext";
+import { CalendarContext, User } from "./CalendarContext";
 
 export default function CalendarProvider({ children }: { children: React.ReactNode }) {
-  const [users, setUsers] = useState<Record<string, User[]>>(defaultCalendarContext.users);
-  const [selectedDate, setSelectedDate] = useState<string | null>(defaultCalendarContext.selectedDate);
-  const [month, setMonth] = useState<number>(defaultCalendarContext.currentMonth);
-  const [year, setYear] = useState<number>(defaultCalendarContext.currentYear);
+  const today = new Date();
+  const [currentDay] = useState(today.getDate());
+  const [currentMonth] = useState(today.getMonth());
+  const [currentYear] = useState(today.getFullYear());
+
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [users, setUsers] = useState<Record<string, User[]>>({});
 
   const addUser = (date: string, user: User) => {
-    setUsers(prev => ({ ...prev, [date]: prev[date] ? [...prev[date], user] : [user] }));
+    setUsers((prev) => ({
+      ...prev,
+      [date]: [...(prev[date] || []), user],
+    }));
+  };
+
+  const updateUser = (date: string, index: number, user: User) => {
+    setUsers((prev) => ({
+      ...prev,
+      [date]: prev[date].map((u, i) => (i === index ? user : u)),
+    }));
   };
 
   const deleteUser = (date: string, index: number) => {
-    setUsers(prev => {
-      const next = { ...prev };
-      const arr = next[date] ? [...next[date]] : [];
-      arr.splice(index, 1);
-      next[date] = arr;
-      return next;
+    setUsers((prev) => ({
+      ...prev,
+      [date]: prev[date].filter((_, i) => i !== index),
+    }));
+  };
+
+  const reorderUsers = (date: string, fromIndex: number, toIndex: number) => {
+    setUsers((prev) => {
+      const list = [...(prev[date] || [])];
+      console.log("Before reorder:", list);
+      const [moved] = list.splice(fromIndex, 1);
+      list.splice(toIndex, 0, moved);
+      console.log("After reorder:", list);
+      return { ...prev, [date]: list };
     });
   };
 
-  // Only export the provider component from this module (default export)
+  const sortUsersByLastName = (date: string) => {
+  setUsers(prev => {
+    const list = [...(prev[date] || [])];
+    list.sort((a, b) => a.lastName.localeCompare(b.lastName));
+    return { ...prev, [date]: list };
+  });
+};
+
+
   return (
     <CalendarContext.Provider
       value={{
-        currentDay: new Date().getDate(),
-        currentWeekday: new Date().getDay(),
-        currentYear: year,
-        currentMonth: month,
-        currentWeek: Math.ceil(new Date().getDate() / 7),
-        users,
+        currentDay,
+        currentMonth,
+        currentYear,
         selectedDate,
         setSelectedDate,
+        users,
         addUser,
+        updateUser,
         deleteUser,
+        reorderUsers,
+        sortUsersByLastName,
       }}
     >
       {children}

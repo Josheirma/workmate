@@ -61,13 +61,15 @@ export default function MonthComponent() {
             day &&
             day === currentDay &&
             month === currentMonth &&
-            year === currentYear)
+            year === currentYear
+          );
           const isSelected = !!(
             selectedDate &&
             day &&
             new Date(selectedDate).getDate() === day &&
             new Date(selectedDate).getMonth() === month &&
-            new Date(selectedDate).getFullYear() === year)
+            new Date(selectedDate).getFullYear() === year
+          );
 
           return (
             <DayComponent
