@@ -3,6 +3,7 @@ import { CalendarContext } from "./CalendarContext";
 import HeadingComponent from "./HeadingComponent";
 import DayComponent from "./DayComponent";
 import styles from "./MonthComponent.module.css";
+import { Link } from 'react-router-dom';
 
 const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -83,6 +84,8 @@ export default function MonthComponent() {
           );
         })}
       </div>
+    <Link to="/daily-graph" className={styles.link}>View Daily Graph</Link>
     </div>
+    
   );
 }

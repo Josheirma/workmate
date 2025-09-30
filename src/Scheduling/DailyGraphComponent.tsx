@@ -1,166 +1,102 @@
-import React from "react";
+import React, { useContext } from "react";
+import styles from "./DailyGraphComponent.module.css";
+import { CalendarContext, User } from "./CalendarContext";
 
-// Timeline24h.tsx
-// Single-file React + TypeScript component that renders a 24-hour timeline
-// with 15-minute sections (96 segments). The timeline content starts 400px
-// to the right (a 400px left spacer). Uses Tailwind classes for quick styling.
+export interface Worker {
+  firstName: string;
+  lastName: string;
+  startShiftNumber: number;
+  endShiftNumber: number;
+}
 
-type Timeline24hProps = {
-  segmentWidth?: number; // width in px for each 15-minute segment
-  height?: number; // height of the timeline track in px
-  heading?: string;
-};
+const workers: Worker[] = [
+  { firstName: "Alice", lastName: "Smith", startShiftNumber: 1, endShiftNumber: 5 },
+  { firstName: "Bob", lastName: "Johnson", startShiftNumber: 10, endShiftNumber: 15 },
+  { firstName: "Carol", lastName: "Williams", startShiftNumber: 3, endShiftNumber: 7 },
+  { firstName: "David", lastName: "Brown", startShiftNumber: 20, endShiftNumber: 25 },
+  { firstName: "Eva", lastName: "Davis", startShiftNumber: 5, endShiftNumber: 9 },
+];
 
-const TOTAL_SEGMENTS = 24 * 4; // 24 hours * 4 (15-min segments) = 96
-const LEFT_SPACER = 400; // px to start the timeline to the right
+const TOTAL_SEGMENTS = 24 * 4; // 96 segments (15 min each)
+const LEFT_COL_WIDTH = 260;
+const HEADING_HEIGHT = 40;
+const ROW_HEIGHT = 30;
+const SEGMENT_WIDTH = 18;
 
-export default function Timeline24h({
-  segmentWidth = 18,
-  height = 72,
-  heading = "24-hour Timeline (15-min sections)",
-}: Timeline24hProps) {
-  const totalWidth = LEFT_SPACER + TOTAL_SEGMENTS * segmentWidth;
+export default function DailyGraphComponent() {
+  const calendarCtx = useContext(CalendarContext);
+  if (!calendarCtx) return <div>No calendar context</div>;
 
-  // Create an array of segment indices 0..95
+  const { selectedDate, users } = calendarCtx;
+  const usersForDate: User[] = selectedDate ? users[selectedDate] || [] : [];
+
+  const totalWidth = TOTAL_SEGMENTS * SEGMENT_WIDTH;
   const segments = Array.from({ length: TOTAL_SEGMENTS }, (_, i) => i);
 
-  // Utility to convert segment index to readable time (HH:MM)
-  const timeLabel = (segmentIndex: number) => {
-    const minutes = segmentIndex * 15;
-    const hour = Math.floor(minutes / 60);
-    const minute = minutes % 60;
-    const hh = hour.toString().padStart(2, "0");
-    const mm = minute.toString().padStart(2, "0");
-    return `${hh}:${mm}`;
+  const formatHour = (hour: number) => {
+    const period = hour < 12 ? "AM" : "PM";
+    const hr12 = hour % 12 === 0 ? 12 : hour % 12;
+    return `${hr12} ${period}`;
   };
 
-  return (
-    <div className="w-full">
-      {/* Top heading */}
-      <div className="px-4 py-3">
-        <h1 className="text-2xl font-semibold">{heading}</h1>
-      </div>
-
-      {/* Scroll container so the timeline can overflow horizontally on small screens */}
-      <div className="overflow-x-auto border-t border-b border-gray-200">
-        {/* Canvas area */}
-        <div
-          className="relative"
-          style={{ width: totalWidth, minWidth: totalWidth }}
-          aria-hidden={false}
-        >
-          {/* Hour labels row (above track) */}
-          <div className="flex items-end select-none" style={{ height: 40 }}>
-            {/* left spacer */}
-            <div style={{ width: LEFT_SPACER }} />
-
-            {/* show an hour label every 1 hour (every 4 segments) */}
-            {segments.map((s) => {
-              const showHour = s % 4 === 0; // every 4 segments == 1 hour
-              return (
-                <div
-                  key={`label-${s}`}
-                  style={{ width: segmentWidth, minWidth: segmentWidth }}
-                  className="flex items-end justify-center"
-                >
-                  {showHour ? (
-                    <div className="text-xs font-medium">{timeLabel(s)}</div>
-                  ) : (
-                    <div className="text-xs opacity-0">{timeLabel(s)}</div>
-                  )}
-                </div>
-              );
-            })}
+  const renderHeader = () => (
+    <div className={styles.headerRow} style={{ width: totalWidth }}>
+      {segments.map((s) => {
+        const isHour = s % 4 === 0;
+        return (
+          <div
+            key={s}
+            className={`${styles.headerCell} ${isHour ? styles.headerCellHour : ""}`}
+            style={{ width: SEGMENT_WIDTH }}
+          >
+            {isHour && <span className={styles.headerLabel}>{formatHour(s / 4)}</span>}
           </div>
+        );
+      })}
+    </div>
+  );
 
-          {/* Timeline track area */}
-          <div className="absolute left-0 top-10" style={{ height }}>
-            {/* track background */}
-            <div className="flex items-stretch" style={{ height }}>
-              {/* left spacer visual (space where nothing is drawn) */}
-              <div style={{ width: LEFT_SPACER }} />
-
-              {/* segments */}
-              <div className="flex" role="list" aria-label="15-minute segments">
-                {segments.map((s) => (
-                  <div
-                    key={`seg-${s}`}
-                    role="listitem"
-                    style={{ width: segmentWidth, minWidth: segmentWidth }}
-                    className="h-full border-l border-gray-200"
-                    title={timeLabel(s)}
-                  >
-                    {/* Optional: small tick mark in the top of the segment */}
-                    <div className="h-2" />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* A thicker hour separator line drawn on top of the segments */}
-            <div className="absolute left-0 top-0" style={{ width: totalWidth }}>
-              <div style={{ height: 0 }}>
-                {/* draw vertical thicker lines every hour */}
-                <div className="relative">
-                  {/* left spacer is empty */}
-                  <div style={{ width: LEFT_SPACER, display: "inline-block" }} />
-
-                  {/* hour lines */}
-                  {Array.from({ length: 24 }, (_, hr) => {
-                    const left = LEFT_SPACER + hr * 4 * segmentWidth;
-                    return (
-                      <div
-                        key={`hour-${hr}`}
-                        style={{ left, position: "absolute", top: 0, bottom: 0 }}
-                      >
-                        <div className="h-full" style={{ width: 1, background: "rgba(0,0,0,0.12)" }} />
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            {/* Example content: a sample event bar from 08:15 to 10:45 */}
-            <div className="absolute left-0 top-8" style={{ width: totalWidth }}>
-              {/* For accessibility show a demo event */}
-              <div
-                style={{
-                  left: LEFT_SPACER + (8 * 4 + 1) * segmentWidth, // 08:15 -> hour 8 *4 + 1
-                  width: (2 * 4 + 3) * segmentWidth, // 2h30m = 10:45 - 08:15 -> 2.5h = 10 segments
-                }}
-                className="absolute top-2 rounded-md px-2 py-1 text-sm text-white bg-gradient-to-r from-sky-600 to-indigo-600 shadow-md"
-                role="button"
-                aria-label="Sample event from 08:15 to 10:45"
-              >
-                Sample event — 08:15 to 10:45
-              </div>
-            </div>
-          </div>
+  const renderLeftColumn = () => (
+    <div className={styles.leftColumn}>
+      {usersForDate.map((user, idx) => (
+        <div key={idx} className={styles.userRow} style={{ height: ROW_HEIGHT }}>
+          {user.lastName}
         </div>
-      </div>
-
-      {/* Short usage note */}
-      <div className="mt-3 px-4 text-sm text-gray-600">
-        Tip: wrap this component in a container with <code className="rounded bg-gray-100 px-1">w-full</code>
-        and allow horizontal scrolling. Adjust <code className="rounded bg-gray-100 px-1">segmentWidth</code>
-        to compress or expand the time scale.
-      </div>
+      ))}
     </div>
   );
-}
 
-/*
-Usage example:
+  const renderTimelineRow = (user: User, idx: number) => (
+    <div key={idx} className={styles.timelineRow} style={{ width: totalWidth }}>
+      {segments.map((s) => {
+        const isHour = s % 4 === 0;
+        const isEventCell = workers.some(
+          (w) => w.lastName === user.lastName && s >= w.startShiftNumber && s <= w.endShiftNumber
+        );
+        const cellClasses = [
+          styles.timelineCell,
+          isHour ? styles.timelineCellHour : "",
+          isEventCell ? styles.timelineCellEvent : "",
+        ].join(" ");
+        return <div key={s} className={cellClasses} style={{ width: SEGMENT_WIDTH }} />;
+      })}
+    </div>
+  );
 
-import Timeline24h from './Timeline24h';
-
-function App() {
   return (
-    <div className="p-4">
-      <Timeline24h segmentWidth={18} height={80} heading="My Schedule" />
+    <div
+      className={styles.container}
+      style={{
+        "--left-col-width": `${LEFT_COL_WIDTH}px`,
+        "--total-width": `${totalWidth}px`,
+        "--row-height": `${ROW_HEIGHT}px`,
+        "--heading-height": `${HEADING_HEIGHT}px`,
+      } as React.CSSProperties}
+    >
+      <div /> {/* empty top-left cell */}
+      {renderHeader()}
+      {renderLeftColumn()}
+      <div className={styles.timelineContainer}>{usersForDate.map(renderTimelineRow)}</div>
     </div>
   );
 }
-
-*/

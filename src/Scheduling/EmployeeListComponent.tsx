@@ -4,6 +4,7 @@ import {TimeInput} from "./TimeInput";
 import styles from "./EmployeeListComponent.module.css";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 
+
 export default function EmployeeListComponent() {
   const ctx = useContext(CalendarContext);
   const [firstName, setFirstName] = useState("");
@@ -18,8 +19,11 @@ export default function EmployeeListComponent() {
   if (!ctx) return null;
 
   const { selectedDate, users, addUser, updateUser, deleteUser, reorderUsers } = ctx;
+  
+
   const employeeList = selectedDate ? users[selectedDate] ?? [] : [];
 
+  
   const fitsInRow = (first: string, last: string) => {
     if (!measureRef.current || !containerRef.current) return true;
     measureRef.current.textContent = `${last}, ${first}`;
@@ -165,6 +169,7 @@ export default function EmployeeListComponent() {
           Alphabetize
         </button>
       </div>
+      
     </div>
   );
 }

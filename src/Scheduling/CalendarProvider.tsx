@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CalendarContext, User } from "./CalendarContext";
 
 export default function CalendarProvider({ children }: { children: React.ReactNode }) {
@@ -8,7 +8,18 @@ export default function CalendarProvider({ children }: { children: React.ReactNo
   const [currentYear] = useState(today.getFullYear());
 
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  //const [selectedDate, setSelectedDate] = useState("2025-09-29");
+  
   const [users, setUsers] = useState<Record<string, User[]>>({});
+  
+
+useEffect(() => {
+  if (selectedDate) {
+    addUser(selectedDate, { firstName: "Alice", lastName: "Smith", shifts: [] });
+    addUser(selectedDate, { firstName: "Bob", lastName: "Johnson", shifts: [] });
+  }
+}, [selectedDate]);
+  
 
   const addUser = (date: string, user: User) => {
     setUsers((prev) => ({
