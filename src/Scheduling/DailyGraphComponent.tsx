@@ -5,17 +5,18 @@ import { CalendarContext, User } from "./CalendarContext";
 export interface Worker {
   firstName: string;
   lastName: string;
-  startShiftNumber: number;
-  endShiftNumber: number;
+  shifts: { start: number; end: number }[];
 }
 
-const workers: Worker[] = [
-  { firstName: "Alice", lastName: "Smith", startShiftNumber: 1, endShiftNumber: 6 },
-  { firstName: "Bob", lastName: "Johnson", startShiftNumber: 10, endShiftNumber: 15 },
-  { firstName: "Carol", lastName: "Williams", startShiftNumber: 3, endShiftNumber: 7 },
-  { firstName: "David", lastName: "Brown", startShiftNumber: 20, endShiftNumber: 25 },
-  { firstName: "Eva", lastName: "Davis", startShiftNumber: 5, endShiftNumber: 9 },
+let workers: Worker[] = [
+  // { firstName: "Alice", lastName: "Smith", startShiftNumber: 1, endShiftNumber: 6 },
+  // { firstName: "Bob", lastName: "Johnson", startShiftNumber: 10, endShiftNumber: 15 },
+  // { firstName: "Carol", lastName: "Williams", startShiftNumber: 3, endShiftNumber: 7 },
+  // { firstName: "David", lastName: "Brown", startShiftNumber: 20, endShiftNumber: 25 },
+  // { firstName: "Eva", lastName: "Davis", startShiftNumber: 5, endShiftNumber: 9 },
 ];
+
+
 
 const TOTAL_SEGMENTS = 24 * 4; // 96 segments (15 min each)
 const LEFT_COL_WIDTH = 260;
@@ -23,7 +24,43 @@ const HEADING_HEIGHT = 90;
 const ROW_HEIGHT = 60;
 const SEGMENT_WIDTH = 18;
 
+
+
+function timeToSection(time: string, type: "start" | "end" = "start"): number {
+
+  const match = time.match(/^(\d{1,2}):(\d{2})\s?(AM|PM)$/i);
+  if (!match) throw new Error("Invalid time format");
+
+  const [, hh, mm, period] = match;
+  let hours = parseInt(hh, 10);
+  const minutes = parseInt(mm, 10);
+
+  // Convert to 24-hour format
+  if (period.toUpperCase() === "AM") {
+    if (hours === 12) hours = 0; // 12 AM → 0h
+  } else {
+    if (hours !== 12) hours += 12; // PM but not 12 → add 12
+  }
+
+  const totalMinutes = hours * 60 + minutes;
+  const section = Math.floor(totalMinutes / 15);
+
+  // Shift so 1:00 AM = 0
+  let adjusted = section - 4;
+
+  // Adjust for start or end segment
+  if (type === "start") adjusted += 1;  // start: 1 segment right
+  //else if (type === "end"); // end: 2 segments left
+
+  return adjusted;
+}
+
+
+
+
+
 export default function DailyGraphComponent() {
+  workers = []; // reset for dynamic population
   const calendarCtx = useContext(CalendarContext);
   if (!calendarCtx) return <div>No calendar context</div>;
 
@@ -33,7 +70,18 @@ export default function DailyGraphComponent() {
   const totalWidth = (TOTAL_SEGMENTS-3) * SEGMENT_WIDTH;
   const segments = Array.from({ length: TOTAL_SEGMENTS-3 }, (_, i) => i);
 
-  
+ 
+ workers = usersForDate.map(user => ({
+  firstName: user.firstName,
+  lastName: user.lastName,
+  shifts: user.shifts.map(shift => ({
+    start: timeToSection(shift.startShift, "start"),
+    end: timeToSection(shift.endShift, "end"),
+  })),
+}));
+    
+
+
   function renderHour(hour: number, translateX: string) {
   return (
     <div
@@ -113,40 +161,23 @@ export default function DailyGraphComponent() {
   );
 
   const renderTimelineRow = (user: Worker, idx: number) => (
-  <div
-    key={idx}
-    className={styles.timelineRow}
-    style={{ width: totalWidth, position: "relative" }}
-  >
+  <div key={idx} className={styles.timelineRow} style={{ width: totalWidth, position: "relative" }}>
     {segments.map((s) => {
       const isHour = s % 4 === 0;
-      const cellClasses = [
-        styles.timelineCell,
-        isHour ? styles.timelineCellHour : "",
-      ].join(" ");
-      return (
-        <div
-          key={s}
-          className={cellClasses}
-          style={{ width: SEGMENT_WIDTH }}
-        />
-      );
+      const cellClasses = [styles.timelineCell, isHour ? styles.timelineCellHour : ""].join(" ");
+      return <div key={s} className={cellClasses} style={{ width: SEGMENT_WIDTH }} />;
     })}
 
-    {/* Horizontal bar aligned with grid */}
-    {workers
-      .filter((w) => w.lastName === user.lastName)
-      .map((w, i) => (
-        <div
-          key={i}
-          className={styles.eventBar}
-          style={{
-            left: `${w.startShiftNumber * SEGMENT_WIDTH}px`,
-            width: `${(w.endShiftNumber - w.startShiftNumber + 1) * SEGMENT_WIDTH}px`,
-             // span entire row height
-          }}
-        />
-      ))}
+    {user.shifts.map((shift, i) => (
+      <div
+        key={i}
+        className={styles.eventBar}
+        style={{
+          left: `${shift.start * SEGMENT_WIDTH}px`,
+          width: `${(shift.end - shift.start + 1) * SEGMENT_WIDTH}px`,
+        }}
+      />
+    ))}
   </div>
 );
 

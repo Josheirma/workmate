@@ -77,7 +77,7 @@ console.log(isEndAfterStart("12:00 AM", "11:59 AM")); // false
           break;
 
         case 4: // second minute digit
-          if (/[0-9]/.test(char)) {
+          if (/[05]/.test(char)) {
             newValue += char;
             cursorPos++;
             newValue += " "; // auto space before AM/PM
