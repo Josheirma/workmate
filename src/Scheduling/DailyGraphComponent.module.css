@@ -76,7 +76,7 @@ body{
   display: flex;
   position: relative; /* for absolute bars */
   height: 20px; /* or your ROW_HEIGHT */
-  
+  padding-right: 100px;
  
 }
 

@@ -131,6 +131,8 @@ export default function DailyGraphComponent() {
           {renderHour(22, "-85%")}
           {renderHour(23, "-110%")}
           {renderHour(24, "-120%")}
+          {renderHour(25, "-120%")}
+
         </div>
       </div>
 
