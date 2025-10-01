@@ -10,7 +10,7 @@ export interface Worker {
 }
 
 const workers: Worker[] = [
-  { firstName: "Alice", lastName: "Smith", startShiftNumber: 1, endShiftNumber: 5 },
+  { firstName: "Alice", lastName: "Smith", startShiftNumber: 1, endShiftNumber: 6 },
   { firstName: "Bob", lastName: "Johnson", startShiftNumber: 10, endShiftNumber: 15 },
   { firstName: "Carol", lastName: "Williams", startShiftNumber: 3, endShiftNumber: 7 },
   { firstName: "David", lastName: "Brown", startShiftNumber: 20, endShiftNumber: 25 },
@@ -104,7 +104,7 @@ export default function DailyGraphComponent() {
 
   const renderLeftColumn = () => (
     <div className={styles.leftColumn}>
-      {usersForDate.map((user, idx) => (
+      {workers.map((user, idx) => (
         <div key={idx} className={styles.userRow} style={{ height: 60 }}>
           {user.lastName}
         </div>
@@ -112,7 +112,7 @@ export default function DailyGraphComponent() {
     </div>
   );
 
-  const renderTimelineRow = (user: User, idx: number) => (
+  const renderTimelineRow = (user: Worker, idx: number) => (
   <div
     key={idx}
     className={styles.timelineRow}
@@ -165,7 +165,7 @@ export default function DailyGraphComponent() {
       <div className={styles.leftList}>
       {renderLeftColumn()}
       </div>
-      <div className={styles.timelineContainer}>{usersForDate.map(renderTimelineRow)}</div>
+      <div className={styles.timelineContainer}>{workers.map(renderTimelineRow)}</div>
       
     </div>
 
