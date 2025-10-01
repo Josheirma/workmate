@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import styles from "./DailyGraphComponent.module.css";
+import styles from "./DailyGraphComponent1.module.css";
 import { CalendarContext, User } from "./CalendarContext";
 
 export interface Worker {
@@ -34,19 +34,19 @@ export default function DailyGraphComponent() {
   const segments = Array.from({ length: TOTAL_SEGMENTS-3 }, (_, i) => i);
 
   
-  function renderHour(hour: number, translateX: string) {
+  function renderHour1(hour: number, translateX: string) {
   return (
     <div
       key={hour}
-      className={styles.headerLabel}
+      className={styles.headerLabel}  
       
     >
-      {formatHour(hour)}
+     
     </div>
   );
 }
 
-  const formatHour = (hour: number) => {
+  const renderHour = (hour: number, str : string) => {
     if (hour === 24) return "12 AM";
     const period = hour < 12 ? "AM" : "PM";
     const hr12 = hour % 12 === 0 ? 12 : hour % 12;
@@ -55,48 +55,29 @@ export default function DailyGraphComponent() {
 
  const renderHeader = () => {
   return (
-    <div className={styles.headerWrapper}>
+    <div className={styles.headerWrapper} >
       {/* Wrapper for labels to create vertical space */}
-      <div className={styles.labelWrapper}>
-        <div className={styles.labelRow}>
-          {renderHour(1, "-30%")}
-          {renderHour(2, "-30%")}
-          {renderHour(3, "-35%")}
-          {renderHour(4, "-35%")}
-          {renderHour(5, "-40%")}
-          {renderHour(6, "-40%")}
-          {renderHour(7, "-45%")}
-          {renderHour(8, "-45%")}
-          {renderHour(9, "-50%")}
-          {renderHour(10, "-50%")}
-          {renderHour(11, "-60%")}
-          {renderHour(12, "-80%")}
-          {renderHour(13, "-110%")}
-          {renderHour(14, "-110%")}
-          {renderHour(15, "-115%")}
-          {renderHour(16, "-115%")}
-          {renderHour(17, "-120%")}
-          {renderHour(18, "-120%")}
-          {renderHour(19, "-110%")}
-          {renderHour(20, "-110%")}
-          {renderHour(21, "-110%")}
-          {renderHour(22, "-85%")}
-          {renderHour(23, "-110%")}
-          {renderHour(24, "-120%")}
+      
+        <div className={styles.labelRow  }    >
+          {"Abc"}
+          
         </div>
-      </div>
-
-      {/* Hour lines */}
+      
+        
+     
       <div className={styles.hourRow}>
         {Array.from({ length: TOTAL_SEGMENTS - 3 }, (_, idx) => {
           const isFirstOfHour = idx % 4 === 0;
           return (
+            
             <div
+                   
               key={idx}
-              className={`${styles.hourSegment} ${isFirstOfHour ? styles.firstOfHour : ""}`}
-            />
+              className={isFirstOfHour ? styles.hourSegmentLine2 : styles.hourSegmentEmpty}
+            > </div>
           );
         })}
+       
       </div>
     </div>
   );
@@ -105,7 +86,7 @@ export default function DailyGraphComponent() {
   const renderLeftColumn = () => (
     <div className={styles.leftColumn}>
       {usersForDate.map((user, idx) => (
-        <div key={idx} className={styles.userRow} style={{ height: 60 }}>
+        <div key={idx} className={styles.userRow} style={{ height: 30 }}>
           {user.lastName}
         </div>
       ))}
@@ -161,10 +142,9 @@ export default function DailyGraphComponent() {
       
     >
       <div /> {/* empty top-left cell */}
+      
       {renderHeader()}
-      <div className={styles.leftList}>
       {renderLeftColumn()}
-      </div>
       <div className={styles.timelineContainer}>{usersForDate.map(renderTimelineRow)}</div>
       
     </div>

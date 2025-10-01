@@ -17,6 +17,20 @@ useEffect(() => {
   if (selectedDate) {
     addUser(selectedDate, { firstName: "Alice", lastName: "Smith", shifts: [] });
     addUser(selectedDate, { firstName: "Bob", lastName: "Johnson", shifts: [] });
+    addUser(selectedDate, { firstName: "Alice", lastName: "Smith", shifts: [] });
+    addUser(selectedDate, { firstName: "Bob", lastName: "Johnson", shifts: [] });
+    addUser(selectedDate, { firstName: "Alice", lastName: "Smith", shifts: [] });
+    addUser(selectedDate, { firstName: "Bob", lastName: "Johnson", shifts: [] });
+    addUser(selectedDate, { firstName: "Alice", lastName: "Smith", shifts: [] });
+    addUser(selectedDate, { firstName: "Bob", lastName: "Johnson", shifts: [] });
+    addUser(selectedDate, { firstName: "Alice", lastName: "Smith", shifts: [] });
+    addUser(selectedDate, { firstName: "Bob", lastName: "Johnson", shifts: [] });
+    addUser(selectedDate, { firstName: "Alice", lastName: "Smith", shifts: [] });
+    addUser(selectedDate, { firstName: "Bob", lastName: "Johnson", shifts: [] });
+    addUser(selectedDate, { firstName: "Alice", lastName: "Smith", shifts: [] });
+    addUser(selectedDate, { firstName: "Bob", lastName: "Johnson", shifts: [] });
+    addUser(selectedDate, { firstName: "Alice", lastName: "Smith", shifts: [] });
+    addUser(selectedDate, { firstName: "Bob", lastName: "Johnson", shifts: [] });
   }
 }, [selectedDate]);
   

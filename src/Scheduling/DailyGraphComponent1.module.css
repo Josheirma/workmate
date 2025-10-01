@@ -41,8 +41,6 @@ body{
 .leftColumn {
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
-  height:40px;
 }
 
 .userRow {
@@ -56,26 +54,20 @@ body{
   font-weight: bold;
   color: black;
   padding:0rem;
-  margin-top:0px;
-  font-size: 17px;
-  padding-top: 0px;
-}
-
-.leftList{
-  height: 200px;
+  margin:0rem
 }
 
 .timelineContainer {
   
   padding-right: 50px;
-  margin-top: 20px;
-  
+   margin-top: 40px;
 }
 
 .timelineRow {
   display: flex;
   position: relative; /* for absolute bars */
   height: 20px; /* or your ROW_HEIGHT */
+ 
   
  
 }
@@ -98,7 +90,7 @@ body{
   flex-direction: column;
   width: var(--total-width);
   padding-bottom: 10px;
-  gap: 20px;
+  
 }
 
 .labelWrapper{
@@ -107,7 +99,7 @@ body{
 .labelRow {
   display: flex;
   justify-content: space-between;
-  padding-top: 30px; /* space above labels */
+  margin-top: 40px; /* space above labels */
   margin-bottom: 30px;
   
 }
@@ -132,7 +124,7 @@ body{
 }
 
 .hourRow {
-  display: flex;
+ 
   width: 100%;
   height: 16px; /* line height */
   margin-top:20px;
@@ -141,12 +133,17 @@ body{
 .hourSegment {
   width:25.75px;
   border-left: 1px solid #ccc;
-  min-height: 100%;
+ 
+  
+ 
+  
 }
 
 .hourSegment.firstOfHour {
   border-left: 2px solid black;
+  height: 100%;
 }
+
 
 
 
@@ -173,4 +170,16 @@ body{
   pointer-events: none;
   top: 4px;
   height:10px;
+}
+
+
+.hourSegmentLine {
+  width: 2px;           
+  background-color: black;
+  height: 100%;         
+  margin-right: 23px;   
+}
+
+.hourSegmentEmpty {
+  width: 25px;   /* match segment width */
 }
