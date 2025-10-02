@@ -87,10 +87,8 @@ useEffect(() => {
   const reorderUsers = (date: string, fromIndex: number, toIndex: number) => {
     setUsers((prev) => {
       const list = [...(prev[date] || [])];
-      console.log("Before reorder:", list);
       const [moved] = list.splice(fromIndex, 1);
       list.splice(toIndex, 0, moved);
-      console.log("After reorder:", list);
       return { ...prev, [date]: list };
     });
   };

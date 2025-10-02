@@ -35,13 +35,13 @@ export function TimeInput({ value, label, onChange }: TimeInputProps) {
     throw new Error("Invalid time format. Use hh:mm AM/PM");
   }
 
-  return endMinutes > startMinutes //&& endMinutes <= 1440;
+  return endMinutes > startMinutes 
 }
 
-console.log("test")
- // Example usage:
+
+// Example usage:
 //console.log(isEndAfterStart("10:30 AM", "11:15 AM")); // true
-console.log(isEndAfterStart("12:00 AM", "11:59 AM")); // false
+//console.log(isEndAfterStart("12:00 AM", "11:59 AM")); // false
 //console.log(isEndAfterStart("12:00 PM", "12:01 AM")); // true
 //console.log(isEndAfterStart("12:00 AM", "12:00 PM")); // true
 
