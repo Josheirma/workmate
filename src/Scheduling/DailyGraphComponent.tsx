@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import styles from "./DailyGraphComponent.module.css";
 import { CalendarContext, User } from "./CalendarContext";
 
+const lastNameCount: Record<string, number> = {};
 export interface Worker {
   firstName: string;
   lastName: string;

@@ -3,6 +3,8 @@ import styles from "./DailyGraphComponent2.module.css";
 import { CalendarContext, User } from "./CalendarContext";
 import { Link } from 'react-router-dom';
 
+const lastNameCount: Record<string, number> = {};
+
 export interface Worker {
   firstName: string;
   lastName: string;
@@ -53,6 +55,8 @@ function timeToSection(time: string, type: "start" | "end" = "start"): number {
 
 
 export default function DailyGraphComponent() {
+
+  const lastNameCount: Record<string, number> = {};
   workers = []; // reset for dynamic population
   const calendarCtx = useContext(CalendarContext);
   if (!calendarCtx) return <div>No calendar context</div>;
@@ -130,14 +134,18 @@ export default function DailyGraphComponent() {
 
 
   const renderLeftColumn = () => (
-    <div className={styles.leftColumn}>
-      {workers.map((user, idx) => (
+  <div className={styles.leftColumn}>
+    {workers.map((user, idx) => {
+      const count = (lastNameCount[user.lastName] || 0) + 1;
+      lastNameCount[user.lastName] = count;
+      return (
         <div key={idx} className={styles.userRow} style={{ height: 60 }}>
-          {user.lastName}
+          {`(${count}) ${user.lastName}`}
         </div>
-      ))}
-    </div>
-  );
+      );
+    })}
+  </div>
+);
 
   const renderTimelineRow = (user: Worker, idx: number) => (
   <div key={idx} className={styles.timelineRow} style={{ width: totalWidth, position: "relative" }}>
