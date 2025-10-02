@@ -11,7 +11,7 @@ export default function App() {
     <CalendarProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<div><MonthComponent /> <DatabaseComponent/>  <EmployeeListComponent />  </div>} />
+          <Route path="/" element={<div><MonthComponent /> <EmployeeListComponent /> <DatabaseComponent/>    </div>} />
           <Route path="/daily-graph" element={<DailyGraphComponent />} />
         </Routes>
       </BrowserRouter>
