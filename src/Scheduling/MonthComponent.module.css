@@ -30,6 +30,23 @@
   gap: 2px; /* small gap between day cells */
 }
 
+.linkWrapper {
+  margin-top: 20px;   /* always 20px below the grid */
+  display: flex;
+  justify-content: center; /* or left/right, depending on layout */
+}
+
+.link {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.linkDisabled {
+  color: gray;
+  text-decoration: none;
+  cursor: not-allowed;
+}
 /* Responsive adjustments */
 @media (max-width: 600px) {
   .weekdays,

@@ -30,7 +30,7 @@ export default function EmployeeListComponent() {
     const nameWidth = measureRef.current.offsetWidth;
     const containerWidth = containerRef.current.offsetWidth;
     const deleteBtnWidth = 28;
-    return nameWidth + deleteBtnWidth < containerWidth - 10;
+    return nameWidth  < (containerWidth - deleteBtnWidth - 130);
   };
 
   const handleFirstNameChange = (val: string) => {

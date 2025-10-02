@@ -11,7 +11,7 @@ export default function MonthComponent() {
   const ctx = useContext(CalendarContext);
   if (!ctx) return null;
 
-  const { currentDay, currentMonth, currentYear, selectedDate, setSelectedDate } = ctx;
+  const { currentDay, currentMonth, currentYear, selectedDate, setSelectedDate, users } = ctx;
 
   const [month, setMonth] = useState(currentMonth);
   const [year, setYear] = useState(currentYear);
@@ -44,6 +44,11 @@ export default function MonthComponent() {
     ...Array(startDay).fill(null),
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
   ];
+
+  // ✅ Check if any employee has at least one shift
+  const hasAnyShift = Object.values(users || {}).some((userList: any) =>
+    userList.some((u: any) => u.shifts && u.shifts.length > 0)
+  );
 
   return (
     <div className={styles.calendar}>
@@ -84,8 +89,16 @@ export default function MonthComponent() {
           );
         })}
       </div>
-    <Link to="/daily-graph" className={styles.link}>View Daily Graph</Link>
+
+      <div className={styles.linkWrapper}>
+      {hasAnyShift ? (
+        <Link to="/daily-graph" className={styles.link}>
+          View Daily Graph
+        </Link>
+      ) : (
+        <span className={styles.linkDisabled}>View Daily Graph</span>
+      )}
     </div>
-    
+    </div>
   );
 }

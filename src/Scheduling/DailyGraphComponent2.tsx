@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
-import styles from "./DailyGraphComponent.module.css";
+import styles from "./DailyGraphComponent2.module.css";
 import { CalendarContext, User } from "./CalendarContext";
+import { Link } from 'react-router-dom';
 
 export interface Worker {
   firstName: string;
@@ -8,26 +9,12 @@ export interface Worker {
   shifts: { start: number; end: number }[];
 }
 
-let workers: Worker[] = [
-  // { firstName: "Alice", lastName: "Smith", startShiftNumber: 1, endShiftNumber: 6 },
-  // { firstName: "Bob", lastName: "Johnson", startShiftNumber: 10, endShiftNumber: 15 },
-  // { firstName: "Carol", lastName: "Williams", startShiftNumber: 3, endShiftNumber: 7 },
-  // { firstName: "David", lastName: "Brown", startShiftNumber: 20, endShiftNumber: 25 },
-  // { firstName: "Eva", lastName: "Davis", startShiftNumber: 5, endShiftNumber: 9 },
-];
+let workers: Worker[] = [];
 
-
-
-const TOTAL_SEGMENTS = 24 * 4; // 96 segments (15 min each)
-const LEFT_COL_WIDTH = 260;
-const HEADING_HEIGHT = 90;
-const ROW_HEIGHT = 60;
+const TOTAL_SEGMENTS = 25 * 4; // 96 segments (15 min each)
 const SEGMENT_WIDTH = 18;
 
-
-
 function timeToSection(time: string, type: "start" | "end" = "start"): number {
-
   const match = time.match(/^(\d{1,2}):(\d{2})\s?(AM|PM)$/i);
   if (!match) throw new Error("Invalid time format");
 
@@ -43,17 +30,23 @@ function timeToSection(time: string, type: "start" | "end" = "start"): number {
   }
 
   const totalMinutes = hours * 60 + minutes;
-  const section = Math.floor(totalMinutes / 15);
+  let section = Math.floor(totalMinutes / 15);
 
-  // Shift so 1:00 AM = 0
-  let adjusted = section - 4;
+  // Rotate so 1:00 AM (60 min = 4 * 15min) becomes 0
+  section = (section - 4 + 96) % 96;
 
-  // Adjust for start or end segment
-  if (type === "start") adjusted += 1;  // start: 1 segment right
-  //else if (type === "end"); // end: 2 segments left
+  if (type === "start") {
+    section += 1; // nudge start inside
+  }
 
-  return adjusted;
+  // Special case: allow "end" at 1:00 AM next day = section 96
+  if (type === "end" && hours === 1 && minutes === 0 && period.toUpperCase() === "AM") {
+    section = 96;
+  }
+
+  return section;
 }
+
 
 
 
@@ -79,23 +72,11 @@ export default function DailyGraphComponent() {
     end: timeToSection(shift.endShift, "end"),
   })),
 }));
-    
 
-
-  function renderHour(hour: number, translateX: string) {
-  return (
-    <div
-      key={hour}
-      className={styles.headerLabel}
-      
-    >
-      {formatHour(hour)}
-    </div>
-  );
-}
 
   const formatHour = (hour: number) => {
     if (hour === 24) return "12 AM";
+    if( hour === 25) return "1 AM";
     const period = hour < 12 ? "AM" : "PM";
     const hr12 = hour % 12 === 0 ? 12 : hour % 12;
     return `${hr12} ${period}`;
@@ -103,36 +84,29 @@ export default function DailyGraphComponent() {
 
  const renderHeader = () => {
   return (
-    <div className={styles.headerWrapper}>
-      {/* Wrapper for labels to create vertical space */}
+    <div className={styles.headerWrapper} style={{ position: "relative" }}>
+      {/* Wrapper for labels */}
       <div className={styles.labelWrapper}>
-        <div className={styles.labelRow}>
-          {renderHour(1, "-30%")}
-          {renderHour(2, "-30%")}
-          {renderHour(3, "-35%")}
-          {renderHour(4, "-35%")}
-          {renderHour(5, "-40%")}
-          {renderHour(6, "-40%")}
-          {renderHour(7, "-45%")}
-          {renderHour(8, "-45%")}
-          {renderHour(9, "-50%")}
-          {renderHour(10, "-50%")}
-          {renderHour(11, "-60%")}
-          {renderHour(12, "-80%")}
-          {renderHour(13, "-110%")}
-          {renderHour(14, "-110%")}
-          {renderHour(15, "-115%")}
-          {renderHour(16, "-115%")}
-          {renderHour(17, "-120%")}
-          {renderHour(18, "-120%")}
-          {renderHour(19, "-110%")}
-          {renderHour(20, "-110%")}
-          {renderHour(21, "-110%")}
-          {renderHour(22, "-85%")}
-          {renderHour(23, "-110%")}
-          {renderHour(24, "-120%")}
-          {renderHour(25, "-120%")}
-
+        <div className={styles.labelRow} style={{ position: "relative" }}>
+          {Array.from({ length: 25 }, (_, hour) => {
+            // Position at the hour line
+            const leftPos = hour * 4 * SEGMENT_WIDTH + 17; 
+            return (
+              <div
+                key={hour}
+                className={styles.headerLabel}
+                style={{
+                  position: "absolute",
+                  left: `${leftPos}px`,
+                  transform: "translateX(-50%)", // center the label
+                  //textAlign: "center",
+                  whiteSpace: "nowrap", // prevent wrapping
+                }}
+              >
+                {formatHour(hour + 1)}
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -151,6 +125,9 @@ export default function DailyGraphComponent() {
     </div>
   );
 };
+
+
+
 
   const renderLeftColumn = () => (
     <div className={styles.leftColumn}>
@@ -183,13 +160,25 @@ export default function DailyGraphComponent() {
   </div>
 );
 
-
-  let LEFT_SPACER = 100
-  let segmentWidth = 18;
   
   return (
+    <>
+    <div className={styles.dailyWrapper}>
+      {/* Header with date */}
+      <div className={styles.dateHeading}>{selectedDate}</div>
+
+      {/* Back to calendar link */}
+      <div className={styles.backLinkWrapper}>
+        <Link to="/" className={styles.backLink}>
+          Back to Calendar
+        </Link>
+      </div>
+      </div>
+    
     <div>
+    
     <div
+    
       className={styles.container}
       
     >
@@ -203,8 +192,9 @@ export default function DailyGraphComponent() {
     </div>
 
   
-  </div>
-
+          </div>
+          </>
+          
     
   );
 }

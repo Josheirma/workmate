@@ -15,7 +15,7 @@ export default function CalendarProvider({ children }: { children: React.ReactNo
 
 useEffect(() => {
   if (selectedDate) {
-    addUser(selectedDate, { firstName: "Alice", lastName: "Smith", shifts: [{ startShift: "1:00 AM", endShift: "1:15 PM" }, {startShift: "1:30 PM", endShift: "1:45 PM"}] });
+    addUser(selectedDate, { firstName: "Alice", lastName: "Smith", shifts: [{ startShift: "1:00 AM", endShift: "1:00 AM" }, ] });
     addUser(selectedDate, { firstName: "Bob", lastName: "Johnson", shifts: [] });
     addUser(selectedDate, { firstName: "Alice", lastName: "Smith", shifts: [] });
     addUser(selectedDate, { firstName: "Bob", lastName: "Johnson", shifts: [] });
