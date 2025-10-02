@@ -5,6 +5,10 @@ import styles from "./EmployeeListComponent.module.css";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 
 
+
+
+
+
 export default function EmployeeListComponent() {
   const ctx = useContext(CalendarContext);
   const [firstName, setFirstName] = useState("");
@@ -78,6 +82,10 @@ export default function EmployeeListComponent() {
   ctx.sortUsersByLastName(selectedDate);
   setSelectedEmployeeIndex(null);
 };
+
+
+
+
 
   if (!selectedDate)
     return <div className={styles.container}>Select a day to view/add employees.</div>;
@@ -172,4 +180,10 @@ export default function EmployeeListComponent() {
       
     </div>
   );
+
+  
+
+
+
+
 }

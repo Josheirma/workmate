@@ -6,6 +6,7 @@ import styles from "./MonthComponent.module.css";
 import { Link } from 'react-router-dom';
 import { User } from "./CalendarContext";
 
+
 const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export default function MonthComponent() {
@@ -101,7 +102,14 @@ export default function MonthComponent() {
       ) : (
         <span className={styles.linkDisabled}>View Daily Graph</span>
       )}
+
+      
+
     </div>
     </div>
   );
+
+
+
+
 }

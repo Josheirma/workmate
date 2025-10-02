@@ -1,4 +1,5 @@
 import { createContext } from "react";
+import { loadUsersForDate } from "./LoadUsersForDate.js";
 
 export interface Shift {
   startShift: string;
@@ -24,5 +25,7 @@ export interface CalendarContextType {
   reorderUsers: (date: string, fromIndex: number, toIndex: number) => void;
   sortUsersByLastName?: (date: string) => void;
 }
+
+
 
 export const CalendarContext = createContext<CalendarContextType | null>(null);
