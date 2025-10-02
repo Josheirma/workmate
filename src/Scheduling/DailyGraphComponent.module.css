@@ -4,7 +4,7 @@ body{
 }
 .container {
   display: grid;
-  grid-template-columns: var(--left-col-width) var(--total-width);
+  grid-template-columns: var(--left-col-width) auto;
   grid-template-rows: var(--heading-height) 10px;
   --left-col-width: 260px;      /* moved from JS */
   --total-width: calc((96 - 4) * 18px); /* 96 segments - 4, times segment width */
@@ -174,3 +174,28 @@ body{
   top: 4px;
   height:10px;
 }
+
+.dailyWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.dateHeading {
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  
+}
+
+.backLinkWrapper {
+  margin-bottom: 20px; /* space between link and timeline */
+}
+
+.backLink {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
