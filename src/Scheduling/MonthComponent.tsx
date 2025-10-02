@@ -4,17 +4,20 @@ import HeadingComponent from "./HeadingComponent";
 import DayComponent from "./DayComponent";
 import styles from "./MonthComponent.module.css";
 import { Link } from 'react-router-dom';
+import { User } from "./CalendarContext";
 
 const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export default function MonthComponent() {
   const ctx = useContext(CalendarContext);
+  
+  // Hooks are always called, even if ctx is null
+  const [month, setMonth] = useState(ctx?.currentMonth ?? 0);
+  const [year, setYear] = useState(ctx?.currentYear ?? 0);
+
   if (!ctx) return null;
 
   const { currentDay, currentMonth, currentYear, selectedDate, setSelectedDate, users } = ctx;
-
-  const [month, setMonth] = useState(currentMonth);
-  const [year, setYear] = useState(currentYear);
 
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
@@ -46,9 +49,9 @@ export default function MonthComponent() {
   ];
 
   // ✅ Check if any employee has at least one shift
-  const hasAnyShift = Object.values(users || {}).some((userList: any) =>
-    userList.some((u: any) => u.shifts && u.shifts.length > 0)
-  );
+  const hasAnyShift = Object.values(users || {}).some((userList: User[]) =>
+  userList.some(u => u.shifts.length > 0)
+);
 
   return (
     <div className={styles.calendar}>

@@ -202,9 +202,23 @@ export default function DailyGraphComponent() {
       
     </div>
 
-  
-  </div>
-
+  <div className="absolute left-0 top-8" style={{ width: totalWidth }}>
+    
+              {/* For accessibility show a demo event */}
+              <div
+                style={{
+                  left: LEFT_SPACER + (8 * 4 + 1) * segmentWidth, // 08:15 -> hour 8 *4 + 1
+                  width: (2 * 4 + 3) * segmentWidth, // 2h30m = 10:45 - 08:15 -> 2.5h = 10 segments
+                }}
+                className={styles.myBox}
+                role="button"
+                aria-label="Sample event from 08:15 to 10:45"
+              >
+                Sample event — 08:15 to 10:45
+              </div>
+            </div>
+          </div>
+          
     
   );
 }
