@@ -3,6 +3,7 @@ import { CalendarContext, CalendarContextType } from "./CalendarContext";
 import { loadAllUsers, loadUsersForDate } from "./LoadUsersForDate";
 import { handleSave } from "./HandleSave";
 import styles from "./DatabaseComponent.module.css";
+import {createDatabase} from  "./createDatabase"
 
 export function DatabaseComponent() {
   const ctx = useContext<CalendarContextType | null>(CalendarContext);
@@ -25,6 +26,14 @@ export function DatabaseComponent() {
   const { selectedDate, users, addUser } = ctx;
 
   return (
+    <div className = {styles.dbButtonContainer}>
+    <button
+          className={styles.createDBButton}
+          onClick={() => createDatabase()}
+        >
+          Create database
+        </button>
+
     <div className={styles.container}>
       {/* Grey Box */}
       <div className={styles.fileBox}>
@@ -89,6 +98,7 @@ export function DatabaseComponent() {
         type="text"
         placeholder="Enter filename..."
       />
+    </div>
     </div>
   );
 }
