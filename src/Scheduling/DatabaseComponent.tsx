@@ -3,10 +3,12 @@ import { CalendarContext, CalendarContextType } from "./CalendarContext";
 import { loadAllUsers, loadUsersForDate } from "./LoadUsersForDate";
 import { handleSave } from "./HandleSave";
 import styles from "./DatabaseComponent.module.css";
-import {createDatabase} from  "./createDatabase"
+import {BooleanContext} from "./HasCreatedDatabaseContext"
+//import {createDatabase} from  "./createDatabase"
 
 export function DatabaseComponent() {
   const ctx = useContext<CalendarContextType | null>(CalendarContext);
+  const ctxBool = useContext(BooleanContext);
   const [selectedEmployeeIndex, setSelectedEmployeeIndex] = useState<number | null>(null);
 
   // Example files
@@ -23,7 +25,16 @@ export function DatabaseComponent() {
   const [selectedFileIndex, setSelectedFileIndex] = useState<number | null>(null);
 
   if (!ctx) return null;
+  if (!ctxBool) return null;
+
   const { selectedDate, users, addUser } = ctx;
+  const {boolValue, toggle} = ctxBool;
+
+  const createDatabase = ()=>{
+
+    toggle();
+
+  }
 
   return (
     <div className = {styles.dbButtonContainer}>

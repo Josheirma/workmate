@@ -3,7 +3,7 @@ import { CalendarContext, User, Shift } from "./CalendarContext";
 import {TimeInput} from "./TimeInput";
 import styles from "./EmployeeListComponent.module.css";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
-
+import {BooleanContext} from "./HasCreatedDatabaseContext"
 
 
 
@@ -11,6 +11,8 @@ import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea
 
 export default function EmployeeListComponent() {
   const ctx = useContext(CalendarContext);
+  const ctxBool = useContext(BooleanContext);
+  
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [timeStart, setTimeStart] = useState("");
@@ -21,9 +23,10 @@ export default function EmployeeListComponent() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   if (!ctx) return null;
+  if (!ctxBool) return null;
 
   const { selectedDate, users, addUser, updateUser, deleteUser, reorderUsers } = ctx;
-  
+  const {boolValue} = ctxBool;
 
   const employeeList = selectedDate ? users[selectedDate] ?? [] : [];
 
@@ -86,10 +89,10 @@ export default function EmployeeListComponent() {
 
 
 
-
+  if(!boolValue) return null;
   if (!selectedDate)
     return <div className={styles.container}>Select a day to view/add employees.</div>;
-
+   
   return (
     <div className={styles.container} ref={containerRef}>
       <h3 className={styles.title}>Employees for {selectedDate}</h3>

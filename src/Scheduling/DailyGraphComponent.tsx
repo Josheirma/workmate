@@ -3,6 +3,9 @@ import styles from "./DailyGraphComponent.module.css";
 import { CalendarContext, User } from "./CalendarContext";
 import { Link } from "react-router-dom";
 
+
+
+
 export interface Worker {
   firstName: string;
   lastName: string;
@@ -42,9 +45,12 @@ function timeToSection(time: string, type: "start" | "end" = "start"): number {
 export default function DailyGraphComponent() {
   workers = [];
   const calendarCtx = useContext(CalendarContext);
+  
   if (!calendarCtx) return <div>No calendar context</div>;
+  
 
   const { selectedDate, users } = calendarCtx;
+  
   const usersForDate: User[] = selectedDate ? users[selectedDate] || [] : [];
 
   const totalWidth = (TOTAL_SEGMENTS - 3) * SEGMENT_WIDTH;
@@ -75,7 +81,7 @@ export default function DailyGraphComponent() {
     const hr12 = hour % 12 === 0 ? 12 : hour % 12;
     return `${hr12} ${period}`;
   };
-
+  
   const renderHeader = () => (
     <div className={styles.headerWrapper} style={{ position: "relative" }}>
       <div className={styles.labelWrapper}>
@@ -140,6 +146,7 @@ export default function DailyGraphComponent() {
     </div>
   );
 
+ 
   return (
     <>
       <div className={styles.dailyWrapper}>

@@ -5,19 +5,24 @@ import DayComponent from "./DayComponent";
 import styles from "./MonthComponent.module.css";
 import { Link } from 'react-router-dom';
 import { User } from "./CalendarContext";
+import {BooleanContext} from "./HasCreatedDatabaseContext"
+
+
 
 
 const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export default function MonthComponent() {
   const ctx = useContext(CalendarContext);
-  
+  const ctxBool = useContext(BooleanContext);
+
   // Hooks are always called, even if ctx is null
   const [month, setMonth] = useState(ctx?.currentMonth ?? 0);
   const [year, setYear] = useState(ctx?.currentYear ?? 0);
 
   if (!ctx) return null;
-
+  if (!ctxBool) return null;
+  const {boolValue, setBoolValue} = ctxBool;
   const { currentDay, currentMonth, currentYear, selectedDate, setSelectedDate, users } = ctx;
 
   const firstDay = new Date(year, month, 1);
@@ -54,7 +59,9 @@ export default function MonthComponent() {
   userList.some(u => u.shifts.length > 0)
 );
 
+  if(!boolValue) return null;
   return (
+    
     <div className={styles.calendar}>
       <HeadingComponent month={month} year={year} onPrev={prevMonth} onNext={nextMonth} />
 
